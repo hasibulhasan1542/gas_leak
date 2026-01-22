@@ -1,0 +1,47 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      topoSetDict;
+}
+
+actions
+(
+    // 1. Select cells in leak region
+    {
+        name h2leakCellSet;
+        type cellSet;
+        action new;
+        source boxToCell;
+        sourceInfo
+        {
+            box (39.95 -0.01 14.95) (40.05 0.01 15.05);  // adjust for your leak box
+        }
+    }
+
+    // 2. Get faces from those cells
+    {
+        name h2leakFaces;
+        type faceSet;
+        action new;
+        source cellToFace;
+        sourceInfo
+        {
+            set h2leakCellSet;
+            option all;     // Add this line
+        }
+    }
+
+    // 3. Keep only boundary faces
+    {
+        name h2leakFaces;
+        type faceSet;
+        action subset;
+        source setToFaceZone;
+        sourceInfo
+        {
+            set h2leakFaces;
+        }
+    }
+);

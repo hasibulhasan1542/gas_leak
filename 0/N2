@@ -1,0 +1,72 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  Field          | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   Operation      | Version:  v2406                                 |
+|   \\  /    And            | Web:      www.OpenFOAM.com                      |
+|    \\/     Manipulation   |                                                 |
+\*---------------------------------------------------------------------------*/
+
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    location    "0";
+    object      N2;
+}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [0 0 0 0 0 0 0];
+
+internalField   uniform 0.79;
+
+boundaryField
+{
+    inlet
+    {
+        type            fixedValue;
+        value           uniform 0.79;  // Air contains ~79% nitrogen
+    }
+
+    outlet
+    {
+        type            inletOutlet;
+        inletValue      uniform 0.79;
+        value           uniform 0.79;
+    }
+
+    h2leak
+    {
+        type            fixedValue;
+        value           uniform 0;     // No nitrogen in pure hydrogen leak
+    }
+
+    bottomWall
+    {
+        type            zeroGradient;
+    }
+
+    top
+    {
+        type            inletOutlet;
+        inletValue      uniform 0.79;
+        value           uniform 0.79;
+    }
+
+    front
+    {
+        type            inletOutlet;
+        inletValue      uniform 0.79;
+        value           uniform 0.79;
+    }
+    
+    back
+    {
+        type            inletOutlet;
+        inletValue      uniform 0.79;
+        value           uniform 0.79;
+    }
+}
+
+// ************************************************************************* //

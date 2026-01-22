@@ -1,0 +1,178 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      snappyHexMeshDict;
+}
+
+
+castellatedMesh true;
+snap            true;
+addLayers       false;
+
+geometry
+{
+    // refineZone.stl
+    // {
+    //     type triSurfaceMesh;
+    //     name refineZone;
+    // }
+
+    outerZone.stl
+    {
+        type triSurfaceMesh;
+        name outerZone;
+    }
+
+    innerZone.stl
+    {
+        type triSurfaceMesh;
+        name innerZone;
+    }
+
+    h2leak.stl
+    {
+        type triSurfaceMesh;
+        name h2leak;
+    }
+    boxRefine
+    {
+        type searchableBox;
+        min (39 -1 13);
+        max (80 3 17);
+    }
+
+}
+
+castellatedMeshControls
+{
+    maxLocalCells 1000000;
+    maxGlobalCells 2000000;
+    minRefinementCells 0;
+    nCellsBetweenLevels 2;
+    allowFreeStandingZoneFaces true;
+    resolveFeatureAngle 30;
+    features ();  // optional .eMesh if using edge snapping
+
+    refinementSurfaces
+    {
+        // refineZone
+        // {
+        //     level (3 3);              // Coarse refinement
+        //     faceType internal;        // No patch created
+        // }
+
+        outerZone
+        {
+            level (3 3);              // Coarse refinement
+            faceType internal;        // No patch created
+        }
+
+        innerZone
+        {
+            level (4 4);              // Coarse refinement
+            faceType internal;        // No patch created
+        }
+
+
+        h2leak
+        {
+            level (5 5);              // Very fine refinement
+            patchInfo
+            {
+                type patch;           // Final patch for H2 boundary
+            }
+        }
+    }
+    refinementRegions
+    {
+        boxRefine
+        {
+            mode inside;
+            levels ((2 2));
+        }
+    }
+    // refinementRegions
+    // {
+    //     refineZone
+    //     {
+    //         mode inside;
+    //         levels ((3 3));
+    //     }
+
+    //     outerZone
+    //     {
+    //         mode inside;
+    //         levels ((3 3));
+    //     }
+
+    //     innerZone
+    //     {
+    //         mode inside;
+    //         levels ((4 4));
+    //     }
+
+    //     h2leak
+    //     {
+    //         mode inside;
+    //         levels ((5 5));
+    //     }
+    // }
+
+    locationInMesh (40 0.5 15);
+}
+
+snapControls
+{
+    nSmoothPatch 3;
+    tolerance 2.0;
+    nSolveIter 30;
+    nRelaxIter 5;
+    nFeatureSnapIter 10;
+    implicitFeatureSnap false;
+    explicitFeatureSnap true;
+    multiRegionFeatureSnap false;
+}
+
+meshQualityControls
+{
+    maxNonOrtho 65;
+    maxBoundarySkewness 20;
+    maxInternalSkewness 4;
+    maxConcave 80;
+    minVol 1e-13;
+    minTetQuality 1e-9;
+    minArea -1;
+    minTwist 0.02;
+    minDeterminant 0.001;
+    minFaceWeight 0.02;
+    minVolRatio 0.01;
+    minTriangleTwist -1;
+    nSmoothScale 4;
+    errorReduction 0.75;
+}
+addLayersControls
+{
+    relativeSizes       true;
+    layers              {};
+    expansionRatio      1.0;
+    finalLayerThickness 0.3;
+    minThickness        0.1;
+    nGrow               0;
+    featureAngle        60;
+    nRelaxIter          3;
+    nSmoothSurfaceNormals 1;
+    nSmoothNormals      3;
+    nSmoothThickness    10;
+    maxFaceThicknessRatio 0.5;
+    maxThicknessToMedialRatio 0.3;
+    minMedianAxisAngle  90;
+    nBufferCellsNoExtrude 0;
+    nLayerIter          50;
+    slipFeatureAngle    30;
+}
+
+
+
+mergeTolerance 1e-6;

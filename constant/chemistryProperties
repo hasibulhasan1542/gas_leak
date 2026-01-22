@@ -1,0 +1,20 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      chemistryProperties;
+}
+
+chemistry              on;
+
+chemistryType
+{
+    solver ode;
+    method standard;
+}
+
+activateChemistry      false;
+initialChemicalTimeStep 1e-6;
+maxChemicalTimeStep     1;

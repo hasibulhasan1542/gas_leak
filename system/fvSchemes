@@ -1,0 +1,67 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      fvSchemes;
+}
+
+// Time derivatives (Euler is standard for transient)
+ddtSchemes
+{
+    default         Euler;
+}
+
+// Gradient schemes (Gauss linear is standard, works fine)
+gradSchemes
+{
+    default         Gauss linear;
+}
+
+// Divergence schemes (upwind is stable but diffusive)
+// Use upwind initially for robustness, then switch to higher-order if needed.
+divSchemes
+{
+    default                         none;
+
+    div(phi,U)                     Gauss upwind;       // Velocity transport
+    div(phi,Yi_h)                  Gauss upwind;       // Mass fractions (H2, N2, O2)
+    div(phi,K)                     Gauss upwind;       // Turbulent kinetic energy
+    div(phi,p)                     Gauss upwind;       // Pressure flux (p)
+    div(phid,p_rgh)                Gauss upwind;       // Pressure flux for p_rgh
+    div(phi,epsilon)               Gauss upwind;       // Turbulence dissipation (epsilon)
+    div(phi,omega)                 Gauss upwind;       // Turbulence specific dissipation (omega)
+    div(phi,k)                     Gauss upwind;       // Turbulent kinetic energy (alternative var)
+    div(((rho*nuEff)*dev2(T(grad(U)))))  Gauss linear;       // Viscous stress divergence (momentum diffusion)
+}
+
+// Laplacian schemes (corrected for non-orthogonal meshes)
+laplacianSchemes
+{
+    default         Gauss linear corrected;
+}
+
+// Interpolation schemes (linear interpolation for fields)
+interpolationSchemes
+{
+    default         linear;
+}
+
+wallDist
+{
+    method          meshWave;
+}
+
+// Surface-normal gradient (snGrad) schemes
+snGradSchemes
+{
+    default         corrected;
+}
+
+// Flux control
+fluxRequired
+{
+    default         no;
+    p_rgh;
+}

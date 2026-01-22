@@ -1,0 +1,117 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  Field          | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   Operation      | Version:  v2406                                 |
+|   \\  /    And            | Web:      www.OpenFOAM.com                      |
+|    \\/     Manipulation   |                                                 |
+\*---------------------------------------------------------------------------*/
+
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volVectorField;
+    location    "0";
+    object      U;
+}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [0 1 -1 0 0 0 0];
+
+internalField   uniform (1 0 0);    // Ambient flow (adjust if needed)
+
+boundaryField
+{
+    // inlet
+    // {
+    //     type            fixedValue;
+    //     value           uniform (2 0 0);    // Simplified inlet velocity in x-direction
+    // }
+
+    inlet
+    {
+        type codedFixedValue;
+        value uniform (0 0 0);
+        name inletLogProfile;
+
+        code
+        #{
+            const fvPatch& boundaryPatch = patch();
+            vectorField& field = *this;
+
+            scalar uStar = 1.368;   // Friction velocity 
+            scalar kappa = 0.41;    // von Karman constant
+            scalar y0 = 0.1;        // Roughness length
+            scalar d = 0.0;         // Zero-plane displacement, use 0.0 if flat-terrain
+
+            const vectorField& Cf = boundaryPatch.Cf();
+
+            forAll(field, faceI)
+            {
+                scalar y = Cf[faceI].y();
+                scalar effectiveY = max(y - d, 0.01); // avoid log(0)
+
+                scalar Uprofile = uStar / kappa * log(effectiveY / y0);
+
+                field[faceI] = vector(Uprofile, 0, 0);
+            }
+        #};
+    }
+
+    outlet
+    {
+        type            pressureInletOutletVelocity;
+        value           uniform (0 0 0);    // Dummy value, solver calculates this
+        phi             phi;
+    }
+
+    // h2leak
+    // {
+    //     type            fixedValue;
+    //     value           uniform (0 7 0);   // Example: upward velocity for H2 leak
+    //     // Alternative: specify mass flow rate through flowRateInletVelocity
+    //     // type        flowRateInletVelocity;
+    //     // massFlowRate 10;                  // kg/s (converted appropriately)
+    // }
+
+    h2leak
+    {
+        type            flowRateInletVelocity;
+        massFlowRate    0.00277778;      // 10 kg/hr = 0.00277778 kg/s
+        rho             rho;             // use the local rho field
+        direction       (0 1 0);         // direction of injection
+        value           uniform (0 0 0); // will be overridden
+    }
+    
+    
+    bottomWall
+    {
+        type            fixedValue;
+        value           uniform (0 0 0);    // No slip at ground
+    }
+
+    top
+    {
+        type            pressureInletOutletVelocity;
+        value           uniform (0 0 0);    // Open top
+        phi             phi;
+    }
+
+    front
+    {
+        type            pressureInletOutletVelocity;
+        value           uniform (0 0 0);    // Dummy value, solver calculates this
+        phi             phi;
+    }
+
+    back
+    {
+        type            pressureInletOutletVelocity;
+        value           uniform (0 0 0);    // Dummy value, solver calculates this
+        phi             phi;
+    }
+
+}
+
+// ************************************************************************* //

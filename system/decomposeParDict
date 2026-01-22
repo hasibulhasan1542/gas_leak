@@ -1,0 +1,32 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version: Your version here                     |
+|   \\  /    A nd           |                                                 |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+
+/* Parallel decomposition dictionary */
+
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      decomposeParDict;
+}
+
+numberOfSubdomains 16;
+
+// method scotch;
+
+method simple;
+
+simpleCoeffs
+{
+    n               (4 2 2);   // 2 splits in X (100m -> 50m), 2 splits in Y (30m -> 15m), 1 in Z
+    delta           0.001;
+}
+
+distributed no;

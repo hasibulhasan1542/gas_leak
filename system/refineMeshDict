@@ -1,0 +1,33 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      refineMeshDict;
+}
+
+set refineRegion;              // CellSet name, created by topoSet
+
+coordinateSystem global;       // 'global' coordinates
+
+directions (e1);          // 
+
+useHexTopology yes;            // 
+geometricCut no;
+
+writeMesh no;
+
+globalCoeffs
+{
+    coordinateSystem global;   // Global directions
+    e1 (1 0 0);                // X-direction
+    e2 (0 1 0);                // Y-direction
+    directions (e1);          // 
+
+    refinementMode
+    {
+        useHexTopology yes;    // Maintain hex mesh structure
+        geometricCut no;       // Don't cut geometry arbitrarily
+    }
+}

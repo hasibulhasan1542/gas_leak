@@ -1,0 +1,94 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      fvSolution;
+}
+
+// ************************************************************************* //
+
+solvers
+{
+    // Density field solvers
+    "(rho|rhoFinal)"
+    {
+        solver          PCG;
+        preconditioner  DIC;
+        tolerance       1e-6;
+        relTol          0.001;
+    }
+
+    // Pressure solver for p_rgh
+    p_rgh
+    {
+        solver              GAMG;
+        tolerance           1e-5;
+        relTol              0.01;
+        smoother            GaussSeidel;
+        cacheAgglomeration  true;
+        nCellsInCoarsestLevel 10;
+        agglomerator        faceAreaPair;
+        mergeLevels         1;
+    }
+
+    // Final pressure solver for p_rgh
+    p_rghFinal
+    {
+        $p_rgh;             // inherits settings from p_rgh
+        tolerance           1e-6;
+        relTol              0.001;
+    }
+
+    // Solvers for velocity, species (except H2), turbulence fields, and enthalpy
+    "(U|k|h|epsilon|omega)"
+    {
+        solver          PBiCG;
+        preconditioner  DILU;
+        tolerance       1e-6;
+        relTol          0.3;
+        nSweeps         1;
+    }
+
+    // Final corrections for velocity, species (except H2), turbulence fields, and enthalpy
+    "(U|k|h|epsilon|omega)Final"
+    {
+        $U;                // inherits solver from U
+        tolerance          1e-6;
+        relTol             0.001;
+    }
+
+    // High-precision solver for H2 mass fraction (Y_H2)
+    Yi
+    {
+        solver          PBiCG;
+        preconditioner  DILU;
+        tolerance       1e-6;
+        relTol          0.1;
+        nSweeps         1;
+    }
+
+    // Final correction for Y_H2
+    YiFinal
+    {
+        $Yi;          // Inherits solver settings from Y_H2
+        tolerance       1e-7;  // Final correction with same high precision
+        relTol          0.1;
+    }
+}
+
+PIMPLE
+{
+    momentumPredictor        yes;
+    nOuterCorrectors         1;
+    nCorrectors              1;
+    nNonOrthogonalCorrectors 0;
+}
+
+// relaxationFactors
+// {
+//     H2 1.0;  // No relaxation to preserve high precision
+// }
+
+// ************************************************************************* //

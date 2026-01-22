@@ -1,0 +1,24 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  Field          | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   Operation      | Version:  v3.0+                                 |
+|   \\  /    And            | Web:      www.OpenFOAM.com                      |
+|    \\/     Manipulation   |                                                 |
+\*---------------------------------------------------------------------------*/
+
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      transportProperties;
+}
+
+// ************************************************************************* //
+
+transportModel  Newtonian;
+
+nu              [0 2 -1 0 0 0 0] 1e-05;
+
+// ************************************************************************* //

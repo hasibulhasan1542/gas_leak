@@ -1,0 +1,22 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      createPatchDict;
+}
+
+pointSync false;
+
+patches
+(
+    {
+        name bottomWall;
+        patchInfo
+        {
+            type wall;
+        }
+        constructFrom patches;
+        patches (bottomWall outerZone innerZone);
+    }
+);

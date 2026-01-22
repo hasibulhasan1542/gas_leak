@@ -1,0 +1,98 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  Field          | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   Operation      | Version:  v2406                                 |
+\*---------------------------------------------------------------------------*/
+
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    location    "0";
+    object      p_rgh;
+}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [1 -1 -2 0 0 0 0];
+
+internalField   uniform 101325;
+
+boundaryField
+{
+    inlet
+    {
+        type            zeroGradient;
+    }
+
+    // outlet
+    // {
+    //     type            fixedValue;
+    //     value           uniform 101325;
+    // }
+    
+    outlet
+    {
+        type            totalPressure;
+        p0              uniform 101325;
+        U               U;
+        phi             phi;
+        rho             rho;
+        psi             none;
+        gamma           0;
+        value           uniform 101325;
+    }
+
+
+    h2leak
+    {
+        type            fixedValue;
+        value           uniform 101325;
+    }
+
+    bottomWall
+    {
+        type            fixedFluxPressure;
+        value           uniform 101325;
+    }
+
+    top
+    {
+        type            totalPressure;
+        p0              uniform 101325;
+        U               U;
+        phi             phi;
+        rho             rho;
+        psi             none;
+        gamma           0;
+        value           uniform 101325;
+    }
+
+    front
+    {
+        type            totalPressure;
+        p0              uniform 101325;
+        U               U;
+        phi             phi;
+        rho             rho;
+        psi             none;
+        gamma           0;
+        value           uniform 101325;
+    }
+
+    back
+    {
+        type            totalPressure;
+        p0              uniform 101325;
+        U               U;
+        phi             phi;
+        rho             rho;
+        psi             none;
+        gamma           0;
+        value           uniform 101325;
+    }
+
+}
+
+// ************************************************************************* //

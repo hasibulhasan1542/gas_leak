@@ -1,0 +1,73 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  Field          | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   Operation      | Version:  v2406                                 |
+|   \\  /    And            | Web:      www.OpenFOAM.com                      |
+|    \\/     Manipulation   |                                                 |
+\*---------------------------------------------------------------------------*/
+
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    location    "0";
+    object      T;
+}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [0 0 0 1 0 0 0];
+
+internalField   uniform 297;
+
+boundaryField
+{
+    inlet
+    {
+        type            fixedValue;
+        value           uniform 297;   // Ambient temperature
+    }
+
+    outlet
+    {
+        type            inletOutlet;
+        inletValue      uniform 297;
+        value           uniform 297;
+    }
+
+    h2leak
+    {
+        type            fixedValue;    // Or zeroGradient if you prefer
+        value           uniform 297;   // You can change this if you simulate hot gas leak
+    }
+
+    bottomWall
+    {
+        type            zeroGradient;
+    }
+
+    top
+    {
+        type            inletOutlet;
+        inletValue      uniform 297;
+        value           uniform 297;
+    }
+
+    front
+    {
+        type            inletOutlet;
+        inletValue      uniform 297;
+        value           uniform 297;
+    }
+
+    back
+    {
+        type            inletOutlet;
+        inletValue      uniform 297;
+        value           uniform 297;
+    }
+
+}
+
+// ************************************************************************* //
